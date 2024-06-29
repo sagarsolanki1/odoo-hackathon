@@ -1,0 +1,74 @@
+/* DietForm.css */
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+  }
+  
+  .diet-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .diet-form h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  .diet-form input,
+  .diet-form select {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .diet-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .diet-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* DietResults.css */
+  .results-container {
+    padding: 20px;
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .results-container h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .results-container p {
+    margin: 10px 0;
+    font-size: 18px;
+  }
+  
+  .results-container h3 {
+    font-size: 20px;
+    margin-top: 20px;
+    color: #007bff;
+  }
+  
