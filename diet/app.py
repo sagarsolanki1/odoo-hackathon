@@ -1,11 +1,15 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, session
 import pymongo
+import bcrypt
 
+# MongoDB connection
 client = pymongo.MongoClient("mongodb+srv://prathamdoshi42:vJdq24J7ZfTqfvRR@cluster0.vsfywjg.mongodb.net/")
-db = client["nutrition"]  # Replace with your database name
+db = client["nutrition"]
 collection = db["values"]
+users_collection = db["users"]  # MongoDB collection for users
 
 app = Flask(__name__)
+app.secret_key = '4e2430da571c91fbf386d930c54225fd706bf5d348cf4cd2'
 
 # Function to calculate BMR and TDEE
 def calculate_caloric_intake(age, gender, height, weight, activity_level, disease):
@@ -46,6 +50,9 @@ def generate_meal_plan(tdee):
 # Route for home page and meal plan generation
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    if 'user' not in session:
+        return redirect(url_for('register'))
+
     if request.method == 'POST':
         # Retrieve form data
         age = int(request.form['age'])
@@ -69,6 +76,58 @@ def home():
     
     # Render the initial form template
     return render_template('index.html')
+
+# Route for user registration
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        # Retrieve form data
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+
+        # Check if the email is already registered
+        if users_collection.find_one({'email': email}):
+            return "Email already exists. Please use a different email."
+
+        # Hash the password for security
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+        # Insert the user into the database
+        users_collection.insert_one({
+            'name': name,
+            'email': email,
+            'password': hashed_password,
+            'role': 'user'  # Default role for new users
+        })
+
+        return redirect(url_for('login'))  # Redirect to login page after registration
+
+    return render_template('register.html')
+
+# Route for user login
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # Retrieve form data
+        email = request.form['email']
+        password = request.form['password']
+
+        # Check if the email exists in the database
+        user = users_collection.find_one({'email': email})
+
+        if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
+            # Authentication successful, set session variables
+            session['user'] = user['email']
+            session['role'] = user['role']
+
+            # Redirect to home page or protected route
+            return redirect(url_for('home'))
+        else:
+            # Invalid credentials
+            return "Invalid login credentials. Please try again."
+
+    return render_template('login.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
