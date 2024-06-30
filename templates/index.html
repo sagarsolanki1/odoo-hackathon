@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Diet Planner</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,7 +32,7 @@
             color: #555;
         }
 
-        input[type="text"], input[type="password"] {
+        input[type="number"], select {
             width: calc(100% - 20px);
             padding: 10px;
             font-size: 16px;
@@ -54,25 +54,49 @@
         input[type="submit"]:hover {
             background-color: #45a049;
         }
-
-        .register-link {
-            text-align: center;
-            display: block;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
-    <h1>Login</h1>
-    <form method="POST" action="{{ url_for('login') }}">
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email" required><br><br>
+    <h1>Diet Planner</h1>
+    {% if 'user' in session %}
+    <form method="POST" action="/">
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required><br><br>
         
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select><br><br>
         
-        <input type="submit" value="Login">
+        <label for="height">Height (cm):</label>
+        <input type="number" id="height" name="height" required><br><br>
+        
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" name="weight" required><br><br>
+        
+        <label for="activity_level">Activity Level:</label>
+        <select id="activity_level" name="activity_level" required>
+            <option value="sedentary">Sedentary</option>
+            <option value="lightly active">Lightly Active</option>
+            <option value="moderately active">Moderately Active</option>
+            <option value="very active">Very Active</option>
+        </select><br><br>
+        
+        <label for="disease">Disease:</label>
+        <select id="disease" name="disease">
+            <option value="none">None</option>
+            <option value="diabetes">Diabetes</option>
+            <option value="hypertension">Hypertension</option>
+            <option value="heart disease">Heart Disease</option>
+            <option value="celiac disease">Celiac Disease</option>
+            <!-- Add more options as needed -->
+        </select><br><br>
+        
+        <input type="submit" value="Generate Meal Plan">
     </form>
-    <a class="register-link" href="{{ url_for('register') }}">Don't have an account? Register here.</a>
+    {% else %}
+    <p>Please <a href="{{ url_for('login') }}">log in</a> to access the diet planner.</p>
+    {% endif %}
 </body>
 </html>
